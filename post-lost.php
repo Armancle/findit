@@ -208,6 +208,7 @@ $borderColor = $reportType === 'found' ? 'border-[#0F7173]' : 'border-[#F4A261]'
 <span class="text-xs text-outline font-medium">Supports JPG, PNG (Max 5MB)</span>
 <input name="images[]" id="file_upload" accept="image/*" class="hidden" multiple="" type="file"/>
 </div>
+<div id="imagePreviewContainer" class="hidden mt-4 flex gap-4 overflow-x-auto pb-2"></div>
 </div>
 <div class="flex justify-end pt-8 relative before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-surface-container-high before:content-['']">
 <button id="submitBtn" class="bg-primary text-white font-bold tracking-tight px-8 py-3 rounded-DEFAULT shadow-[0_4px_14px_0_rgba(13,27,42,0.39)] hover:shadow-[0_6px_20px_rgba(13,27,42,0.23)] hover:bg-primary-container transition duration-200 bg-gradient-to-br from-[#0D1B2A] to-[#0f1c2c] flex items-center gap-2" type="submit">
@@ -229,10 +230,32 @@ $borderColor = $reportType === 'found' ? 'border-[#0F7173]' : 'border-[#F4A261]'
 
     document.getElementById('file_upload').addEventListener('change', function() {
         const fileCount = this.files.length;
+        const previewContainer = document.getElementById('imagePreviewContainer');
+        
         if(fileCount > 0) {
             document.querySelector('.group.cursor-pointer p.mb-1').innerText = fileCount + ' file(s) selected';
+            
+            // Create image previous
+            previewContainer.innerHTML = ''; // clear existing
+            previewContainer.classList.remove('hidden');
+            
+            Array.from(this.files).forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.className = 'w-24 h-24 object-cover rounded-lg shadow-sm border border-outline-variant';
+                        previewContainer.appendChild(img);
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+            
         } else {
             document.querySelector('.group.cursor-pointer p.mb-1').innerText = 'Drag and drop images here';
+            previewContainer.innerHTML = '';
+            previewContainer.classList.add('hidden');
         }
     });
 

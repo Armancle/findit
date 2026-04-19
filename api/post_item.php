@@ -52,7 +52,7 @@ try {
             
             if ($uploadResult['success']) {
                 $status = $i === 0 ? 1 : 0; // First uploaded image is primary
-                $imgPath = '/uploads/items/' . $uploadResult['filename'];
+                $imgPath = 'uploads/items/' . $uploadResult['filename'];
                 
                 $imgStmt = $pdo->prepare("INSERT INTO item_images (item_id, image_path, is_primary) VALUES (?, ?, ?)");
                 $imgStmt->execute([$itemId, $imgPath, $status]);
@@ -62,11 +62,11 @@ try {
         
         // If no image successfully uploaded, add a placeholder
         if (!$uploadedAny) {
-            $pdo->prepare("INSERT INTO item_images (item_id, image_path, is_primary) VALUES (?, '/assets/img/placeholder.jpg', 1)")->execute([$itemId]);
+            $pdo->prepare("INSERT INTO item_images (item_id, image_path, is_primary) VALUES (?, 'assets/img/placeholder.jpg', 1)")->execute([$itemId]);
         }
     } else {
         // Default placeholder
-        $pdo->prepare("INSERT INTO item_images (item_id, image_path, is_primary) VALUES (?, '/assets/img/placeholder.jpg', 1)")->execute([$itemId]);
+        $pdo->prepare("INSERT INTO item_images (item_id, image_path, is_primary) VALUES (?, 'assets/img/placeholder.jpg', 1)")->execute([$itemId]);
     }
 
     jsonResponse(true, ['item_id' => $itemId], 'Item posted successfully.');

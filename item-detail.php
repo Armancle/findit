@@ -32,7 +32,7 @@ if (empty($images)) {
 
 $isOwner = isset($_SESSION['user_id']) && $_SESSION['user_id'] == $item['user_id'];
 $isLoggedIn = isset($_SESSION['user_id']);
-$isResolved = in_array($item['status'], ['returned', 'recovered']);
+$isResolved = in_array($item['status'], ['returned']);
 $isLost = $item['type'] === 'lost';
 
 $themeColorClass = $isLost ? 'text-[#F4A261]' : 'text-secondary';
@@ -259,11 +259,8 @@ $themeLineClass = $isLost ? 'border-[#F4A261]' : 'border-secondary';
             
             if(data.success) {
                 statusBox.classList.add('bg-[#c6f6d5]', 'text-[#22543d]');
-                statusBox.innerText = data.message + " Redirecting to messages...";
+                statusBox.innerText = data.message;
                 btn.style.display = 'none'; // hide button gracefully
-                setTimeout(() => {
-                    window.location.href = `messages.php?item_id=${itemId}`;
-                }, 1500);
             } else {
                 statusBox.classList.add('bg-error-container', 'text-on-error-container');
                 statusBox.innerText = data.message;
